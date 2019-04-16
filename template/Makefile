@@ -1,14 +1,9 @@
-.PHONY: all uplatex latex
+main.pdf: main.tex imcreport.sty $(filter-out main.pdf,$(wildcard *.pdf))
+	lualatex -halt-on-error -interaction=nonstopmode main.tex
+	lualatex -halt-on-error -interaction=nonstopmode main.tex
+	lualatex -halt-on-error -interaction=nonstopmode main.tex
 
-all: main.pdf
+clean:
+	rm -f main.pdf main.log main.aux
 
-main.pdf: main.dvi
-	dvipdfmx main.dvi
-
-main.dvi: main.tex imcreport.sty
-	uplatex main.tex
-	uplatex main.tex
-
-imcreport.sty:
-	cp ../template/imcreport.sty ./
-
+.PHONY: clean

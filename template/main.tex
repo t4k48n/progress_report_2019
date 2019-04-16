@@ -1,16 +1,5 @@
-% ドキュメントクラスの指定。使えるならばjsarticleを指定し、
-% そうでなければjarticleを指定する。しかしjsarticleがない環境は
-% 新しい環境に更新すべきだと思う。
-%   - 10pt:       本文の文字サイズを10ptにする。実用上は10ptか11ptを指定する。
-%   - a4j:        用紙サイズを日本語用A4サイズにする。
-%                 報告書は日本語なので必要。
-%   - twocolumn:  二段組にする。
-%                 報告書のフォーマットは二段組なので基本的に必要。
-%   - dvipdfmx:   画像の描画にdvipdfmxを使う。
-%                 後述のgraphicxパッケージを使うときに必要。
-%   - uplatex:    TeXの処理系をupLaTeXにする。
-%                 **処理系がpLaTeXのときは 削 除 すること。**
-\documentclass[10pt, a4j, uplatex, dvipdfmx, twocolumn]{jsarticle}
+% 報告会テンプレート（LuaLaTeX対応版）
+\documentclass[10pt,a4j,twocolumn]{ltjsarticle}
 
 
 \usepackage{graphicx}   % \includegraphics を使うためのパッケージ読み込み
@@ -23,8 +12,8 @@
 \sloppy
 
 
-\title{中間報告用\LaTeX テンプレートの使い方}   % タイトル
-\author{hidemop}                                % 著者
+\title{中間報告用Lua\LaTeX テンプレートの使い方}   % タイトル
+\author{IMC Staff}                              % 著者
 \studentnumber{No.~1234}                        % 学籍番号
 \date{2016年12月7日}                            % 日付
 \header{中間報告用テンプレート}                 % 左上のヘッダ内容
