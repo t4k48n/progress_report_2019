@@ -21,7 +21,7 @@
 
 \begin{document}
 
-\maketitle
+\maketitle % タイトル、著者情報などを挿入
 
 \section{はじめに}
 
@@ -37,10 +37,10 @@
 
 Lua\LaTeX では図~\ref{バッテンのラベル}のように、図を挿入することができます。
 \begin{figure}[bp]
-  \centering
-  \includegraphics[width=0.45\textwidth]{./sample_figure.pdf}
-  \caption{バッテン}
-  \label{バッテンのラベル}
+  \centering                                                  % 画像とキャプションを中央揃えにする
+  \includegraphics[width=0.45\textwidth]{./sample_figure.pdf} % 指定幅（width）で画像を挿入。pdf, png, jpg, epsなどが利用可能
+  \caption{バッテン}                                          % キャプション
+  \label{バッテンのラベル}                                    % 本文から参照するためのラベル
 \end{figure}
 \verb|\begin{figure}|の後ろに位置を指示する文字を四角カッコ\verb|[]|を使って与えることで画像の挿入位置を指定することができます。
 \verb|t|, \verb|b|, \verb|p|, \verb|h|の4種類を指定することができ、それぞれ次のような意味を持ちます。
