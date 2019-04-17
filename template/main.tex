@@ -38,7 +38,8 @@
 Lua\LaTeX では図~\ref{バッテンのラベル}のように、図を挿入することができます。
 \begin{figure}[bp]
   \centering                                                  % 画像とキャプションを中央揃えにする
-  \includegraphics[width=0.45\textwidth]{./sample_figure.pdf} % 指定幅（width）で画像を挿入。pdf, png, jpg, epsなどが利用可能
+  \includegraphics[width=80truemm]{./sample_figure.pdf}       % 指定幅（width）で画像（pdf, png, jpg, eps）を挿入。
+                                                              % 理由は省略するが、寸法にmmではなくtruemmを使うこと。
   \caption{バッテン}                                          % キャプション
   \label{バッテンのラベル}                                    % 本文から参照するためのラベル
 \end{figure}
