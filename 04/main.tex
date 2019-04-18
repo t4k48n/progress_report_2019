@@ -1,0 +1,59 @@
+% 報告会テンプレート（LuaLaTeX対応版）
+\documentclass[10pt,a4j,twocolumn]{ltjsarticle}
+
+
+\usepackage{graphicx}   % \includegraphics を使うためのパッケージ読み込み
+\usepackage{imcreport}  % IMC報告会用テンプレートパッケージの読み込み
+
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+
+% ハイフネーションを抑制する。数値が大きいほど、無理にでも抑制しようとする。
+\hyphenpenalty=10000\relax
+\exhyphenpenalty=10000\relax
+\sloppy
+
+
+\title{中間報告用Lua\LaTeX テンプレートの使い方} % タイトル
+\author{発表者氏名}                              % 著者
+\studentnumber{学籍番号}                         % 学籍番号
+\date{YYYY--MM--DD}                              % 日付
+\header{中間報告}                                % 左上のヘッダ内容
+
+
+\begin{document}
+
+\maketitle
+
+\section{はじめに}
+
+静的マニピュレータはリンクの角度やアームの長さから手先の座標が幾何学的に求まる。
+ここでマニピュレータのパラメータに確率的な分布を仮定した場合、手先座標もまた確率的な分布を持つようになる。
+
+先行研究ではこの点に着目し、不確実性分散と呼ばれる評価指標を提案した。
+この評価指標を用いることでマニピュレータの手先位置決めの精度を解析したり、精度を高めるように姿勢を最適化することが容易になる。
+
+しかしながら不確実性分散は静的マニピュレータに定義された指標であるため、動的マニピュレータには適用することができない。
+そこで不確実性分散を動的マニピュレータに対して拡張した指標である動的不確実性分散を提案する。
+
+静的マニピュレータに対して定義され、後に動的マニピュレータに拡張された評価指標として可操作度と動的可操作度がある。
+これらの指標を調査することは不確実性分散の拡張を考えるのに役立つと考えられるため調査した。
+
+\section{可操作度}
+
+静的マニピュレータは姿勢$\bm{q}$から手先位置$\bm{r}$を求めるモデルで表される。
+\begin{equation}
+  \bm{r} = \bm{f}(\bm{q})
+\end{equation}
+
+\section{動的可操作度}
+
+動的マニピュレータはトルク$\bm{\tau}$から手先加速度$\ddot{\bm{r}}$を求めるモデルで表される。
+\begin{equation}
+  \ddot{\bm{r}} = \bm{f}(\bm{\tau})
+\end{equation}
+
+\section{不確実性分散の動的システムへの拡張}
+
+\end{document}
+
