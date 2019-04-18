@@ -37,15 +37,26 @@
 しかしながら不確実性分散は静的マニピュレータに定義された指標であるため、動的マニピュレータには適用することができない。
 そこで不確実性分散を動的マニピュレータに対して拡張した指標である動的不確実性分散を提案する。
 
+不確実性分散は手先変位についての評価関数であるが、可操作度は手先速度についての評価関数である。
+したがって、不確実性分散を可操作度の拡張と同様の方法で動的マニピュレータに拡張するにはまず不確実性分散を速度についての評価関数に拡張するべきだろう。
+
 静的マニピュレータに対して定義され、後に動的マニピュレータに拡張された評価指標として可操作度と動的可操作度がある。
 これらの指標を調査することは不確実性分散の拡張を考えるのに役立つと考えられるため調査した。
 
-\section{可操作度}
+\section{静的マニピュレータ}
 
-静的マニピュレータは姿勢$\bm{q}$から手先位置$\bm{r}$を求めるモデルで表される。
+静的マニピュレータは姿勢$\bm{q}$から手先位置$\bm{r}$を求める関数$\bm{f}$としてモデル化される。
 \begin{equation}
-  \bm{r} = \bm{f}(\bm{q}) \label{eq:static_manipulator}
+  \bm{r} = \bm{f}(\bm{q}). \label{eq:static_manipulator_position}
 \end{equation}
+
+式~\eqref{eq:static_manipulator_position}の両辺を時刻$t$で微分すると手先速度$\bm{v} = \dot{\bm{r}}$と姿勢速度$\dot{\bm{q}}$間のモデルが得られる。
+\begin{equation}
+  \bm{v} = \bm{J}(\bm{q}) \dot{\bm{q}}. \label{eq:static_manipulator_velocity}
+\end{equation}
+ここで$\bm{J}$はマニピュレータのヤコビアンである。
+
+\section{可操作度}
 
 \begin{equation}
   M = \sqrt{\det \left( \bm{J} \bm{J}^{\mathrm{T}} \right)}
@@ -58,40 +69,35 @@
 
 不確実性分散は可操作度に類似する点が多いため、可操作度と比較する形で不確実性分散を示す。
 
-式~\eqref{eq:static_manipulator}のマニピュレータに不確かさが存在するとき、手先位置$\bm{r}^{*}$は不確かさを表す確率変数$\bm{\xi} \in \bm{\Xi}$を用いて次式で表される。
-\begin{equation}
-  \bm{r} = \bm{f}^{*}(\bm{q}, \bm{\xi})
-\end{equation}
+式~\eqref{eq:static_manipulator_position}のマニピュレータに不確かさが存在するとき、不確かさを持つ手先位置$\bm{r}^{*}$および速度$\bm{v}^{*}$は不確かさを表す確率変数$\bm{\xi} \in \bm{\Xi}$を用いて次式で表される。
+\begin{align}
+  \bm{r}^{*} &= \bm{f}^{*}(\bm{q}, \bm{\xi})              \\
+  \bm{v}^{*} &= \bm{J}^{*}(\bm{q}, \bm{\xi}) \dot{\bm{q}}
+\end{align}
 
-このとき$\bm{r}$の重み付き分散共分散行列は次式となる。
+このとき$\bm{r}$についての不確実性分散は次式の重み付き分散共分散行列の最大の特異値である。
 \begin{gather}
-  C = \begin{bmatrix}
-        \tilde{c}_{1, 1} & \tilde{c}_{1, 1} & \cdots & \tilde{c}_{1, n} \\
-        \tilde{c}_{2, 1} & \tilde{c}_{2, 1} & \cdots & \tilde{c}_{2, n} \\
-        \vdots           & \vdots           & \ddots & \vdots           \\
-        \tilde{c}_{n, 1} & \tilde{c}_{n, 1} & \cdots & \tilde{c}_{n, n} \\
-      \end{bmatrix} \\
+  C_{\bm{r}} = \begin{bmatrix}
+                 \tilde{c}_{1, 1} & \tilde{c}_{1, 1} & \cdots & \tilde{c}_{1, n} \\
+                 \tilde{c}_{2, 1} & \tilde{c}_{2, 1} & \cdots & \tilde{c}_{2, n} \\
+                 \vdots           & \vdots           & \ddots & \vdots           \\
+                 \tilde{c}_{n, 1} & \tilde{c}_{n, 1} & \cdots & \tilde{c}_{n, n} \\
+               \end{bmatrix} \\
   \tilde{c}_{i, j} = w_{i} w_{j} \int_{\bm{\Xi}} (r_{i} - m_{i})(r_{j} - m_{j}) p(\bm{\xi}) \mathrm{d}\bm{\xi} \notag
 \end{gather}
 ここで$p(\bm{\xi})$は$\bm{\xi}$の確率密度関数、$m_{i}$および$w_{i}$はそれぞれ$r_{i}$に対する期待値および重みパラメータである。
 
-%不確実性分散は次式で定義される。
-%\begin{equation}
-%  U = \text{maximum singular value of} \, C
-%\end{equation}
-
-\section{動的可操作度}
-
-動的マニピュレータはトルク$\bm{\tau}$から手先加速度$\ddot{\bm{r}}$を求めるモデルで表される。
-\begin{equation}
-  \ddot{\bm{r}} = \bm{F}(\bm{\tau})
-\end{equation}
-
-%\begin{equation}
-%  \ddot{\bm{r}} = \bm{F}^{*}(\bm{\tau}, \bm{\xi})
-%\end{equation}
-
-\section{不確実性分散の動的システムへの拡張}
+同様にして速度$\bm{v} = \dot{\bm{r}}$に対する分散共分散行列を考えることができる。
+\begin{gather}
+  C_{\bm{v}} = \begin{bmatrix}
+                 \bar{c}_{1, 1} & \bar{c}_{1, 1} & \cdots & \bar{c}_{1, n} \\
+                 \bar{c}_{2, 1} & \bar{c}_{2, 1} & \cdots & \bar{c}_{2, n} \\
+                 \vdots         & \vdots         & \ddots & \vdots         \\
+                 \bar{c}_{n, 1} & \bar{c}_{n, 1} & \cdots & \bar{c}_{n, n} \\
+               \end{bmatrix} \\
+  \bar{c}_{i, j} = \bar{w}_{i} \bar{w}_{j} \int_{\bm{\Xi}} (v_{i} - \mu_{i})(v_{j} - \mu_{j}) p(\bm{\xi}) \mathrm{d}\bm{\xi} \notag
+\end{gather}
+ここで$\mu_{i}$および$\bar{w}_{i}$はそれぞれ$v_{i}$に対する期待値および重みパラメータである。
 
 \end{document}
 
