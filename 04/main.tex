@@ -28,76 +28,66 @@
 
 \section{はじめに}
 
-静的マニピュレータはリンクの角度やアームの長さから手先の座標が幾何学的に求まる。
-ここでマニピュレータのパラメータに確率的な分布を仮定した場合、手先座標もまた確率的な分布を持つようになる。
+マニピュレータがアーム長さのようなパラメータに不確かさを持つ場合、不確かさは手先へと伝播し、その結果手先位置も不確かさを持つようになる。
+先行研究では手先位置の確率分布の大きさを表す評価関数として不確実性分散（UV）を設計し、この評価関数を用いてマニピュレータの不確かさ解析や姿勢最適化を行った。
 
-先行研究ではこの点に着目し、不確実性分散と呼ばれる評価指標を提案した。
-この評価指標を用いることでマニピュレータの手先位置決めの精度を解析したり、精度を高めるように姿勢を最適化することが容易になる。
+しかしUVは静的マニピュレータに対して定義した評価関数であるため、動的マニピュレータには適用することができないという問題を持つ。
+この問題を解決するアプローチとして、(A)~動的マニピュレータに対応する既存の評価関数に不確実性分散の性質を取り入れる、(B)~不確実性分散を動的マニピュレータへ拡張する、などが考えられる。
 
-しかしながら不確実性分散は静的マニピュレータに定義された指標であるため、動的マニピュレータには適用することができない。
-そこで不確実性分散を動的マニピュレータに対して拡張した指標である動的不確実性分散を提案する。
+本報告書では、アプローチ(A)として吉川が提案した可操作度に不確かさの影響を取り入れる方法を提案する。
+可操作度は簡単な式変形で動的可操作度に拡張することが可能であるため、不確かさを取り入れた可操作度が有効であれば動的マニピュレータへの拡張も可能であると考えられる。
+手法の提案に加えて、本報告書では2リンクマニピュレータに手法を適用した結果を示す。
 
-不確実性分散は手先変位についての評価関数であるが、可操作度は手先速度についての評価関数である。
-したがって、不確実性分散を可操作度の拡張と同様の方法で動的マニピュレータに拡張するにはまず不確実性分散を速度についての評価関数に拡張するべきだろう。
+\section{静的マニピュレータと可操作度}
 
-静的マニピュレータに対して定義され、後に動的マニピュレータに拡張された評価指標として可操作度と動的可操作度がある。
-これらの指標を調査することは不確実性分散の拡張を考えるのに役立つと考えられるため調査した。
-
-\section{静的マニピュレータ}
-
-静的マニピュレータは姿勢$\bm{q}$から手先位置$\bm{r}$を求める関数$\bm{f}$としてモデル化される。
+静的マニピュレータは姿勢$\bm{q} \in \mathbb{R}^{m}$から手先位置$\bm{r} \in \mathbb{R}^{n}$を求める関数$\bm{f}$としてモデル化される。
 \begin{equation}
   \bm{r} = \bm{f}(\bm{q}). \label{eq:static_manipulator_position}
 \end{equation}
-
-式~\eqref{eq:static_manipulator_position}の両辺を時刻$t$で微分すると手先速度$\bm{v} = \dot{\bm{r}}$と姿勢速度$\dot{\bm{q}}$間のモデルが得られる。
+式~\eqref{eq:static_manipulator_position}の両辺を時刻$t$で微分すると、
+%式~\eqref{eq:static_manipulator_position}の両辺を時刻$t$で微分すると速度についてのモデルが得られる。
 \begin{equation}
-  \bm{v} = \bm{J}(\bm{q}) \dot{\bm{q}}. \label{eq:static_manipulator_velocity}
+  \dot{\bm{r}} = \bm{J}(\bm{q}) \dot{\bm{q}}. \label{eq:static_manipulator_velocity}
 \end{equation}
-ここで$\bm{J}$はマニピュレータのヤコビアンである。
+ここで$\bm{J} = [\partial f_{i} / \partial q_{j}]_{1 \leq i \leq m, 1 \leq j \leq n}$はマニピュレータのヤコビアンである。
 
-\section{可操作度}
-
+式~\eqref{eq:static_manipulator_velocity}のマニピュレータに対する可操作度$M$は次式で与えられる。
 \begin{equation}
-  M = \sqrt{\det \left( \bm{J} \bm{J}^{\mathrm{T}} \right)}
+  M(\bm{q}) = \sqrt{\det \left( \bm{J}(\bm{q}) \bm{J}^{\mathrm{T}}(\bm{q}) \right)}.
 \end{equation}
+可操作度は速度$|\bm{v}| \leq 1$における手先$\bm{r}$がなす楕円体の面積に比例する。
+したがって可操作度が大きい方がマニピュレータの運動性能が高い。
+$M = 0$となる姿勢は特異姿勢と呼ばれ、マニピュレータの関節の動きが急激に大きくなるため避けるべきである。
 
 指標$M$は姿勢$\bm{q}$の変化に対する$\bm{r}$の変化の大きさを表す。
 可操作度が大きいことはマニピュレータの運動性能が高いことを意味する。
 
-\section{不確実性分散}
+\section{不確かさを取り入れた可操作度}
 
-不確実性分散は可操作度に類似する点が多いため、可操作度と比較する形で不確実性分散を示す。
+マニピュレータが確率変数を$\bm{\xi} \in \mathbb{R}^{l}$で表される不確かさを持つ場合、式~\eqref{eq:static_manipulator_velocity}は次式で書き換えられる。
+\begin{equation}
+  \dot{\bm{r}} = \bm{J}^{*}(\bm{q}, \bm{\xi}) \dot{\bm{q}}. \label{eq:static_manipulator_velocity_with_uncertainty}
+\end{equation}
+ここで$\bm{J}^{*}$は不確かさもモデル化したヤコビアンである。
 
-式~\eqref{eq:static_manipulator_position}のマニピュレータに不確かさが存在するとき、不確かさを持つ手先位置$\bm{r}^{*}$および速度$\bm{v}^{*}$は不確かさを表す確率変数$\bm{\xi} \in \bm{\Xi}$を用いて次式で表される。
-\begin{align}
-  \bm{r}^{*} &= \bm{f}^{*}(\bm{q}, \bm{\xi})              \\
-  \bm{v}^{*} &= \bm{J}^{*}(\bm{q}, \bm{\xi}) \dot{\bm{q}}
-\end{align}
+このときの可操作度は、
+\begin{equation}
+  M(\bm{q}, \bm{\xi}) = \sqrt{\det \left( \bm{J}^{*}(\bm{q}, \bm{\xi}) \bm{J}^{*\mathrm{T}}(\bm{q}, \bm{\xi}) \right)}.
+\end{equation}
+以下ではこの$M$を拡張可操作度と呼ぶことにする。
 
-このとき$\bm{r}$についての不確実性分散は次式の重み付き分散共分散行列の最大の特異値である。
-\begin{gather}
-  C_{\bm{r}} = \begin{bmatrix}
-                 \tilde{c}_{1, 1} & \tilde{c}_{1, 1} & \cdots & \tilde{c}_{1, n} \\
-                 \tilde{c}_{2, 1} & \tilde{c}_{2, 1} & \cdots & \tilde{c}_{2, n} \\
-                 \vdots           & \vdots           & \ddots & \vdots           \\
-                 \tilde{c}_{n, 1} & \tilde{c}_{n, 1} & \cdots & \tilde{c}_{n, n} \\
-               \end{bmatrix} \\
-  \tilde{c}_{i, j} = w_{i} w_{j} \int_{\bm{\Xi}} (r_{i} - m_{i})(r_{j} - m_{j}) p(\bm{\xi}) \mathrm{d}\bm{\xi} \notag
-\end{gather}
-ここで$p(\bm{\xi})$は$\bm{\xi}$の確率密度関数、$m_{i}$および$w_{i}$はそれぞれ$r_{i}$に対する期待値および重みパラメータである。
+\section{拡張可操作度の検証}
 
-同様にして速度$\bm{v} = \dot{\bm{r}}$に対する分散共分散行列を考えることができる。
-\begin{gather}
-  C_{\bm{v}} = \begin{bmatrix}
-                 \bar{c}_{1, 1} & \bar{c}_{1, 1} & \cdots & \bar{c}_{1, n} \\
-                 \bar{c}_{2, 1} & \bar{c}_{2, 1} & \cdots & \bar{c}_{2, n} \\
-                 \vdots         & \vdots         & \ddots & \vdots         \\
-                 \bar{c}_{n, 1} & \bar{c}_{n, 1} & \cdots & \bar{c}_{n, n} \\
-               \end{bmatrix} \\
-  \bar{c}_{i, j} = \bar{w}_{i} \bar{w}_{j} \int_{\bm{\Xi}} (v_{i} - \mu_{i})(v_{j} - \mu_{j}) p(\bm{\xi}) \mathrm{d}\bm{\xi} \notag
-\end{gather}
-ここで$\mu_{i}$および$\bar{w}_{i}$はそれぞれ$v_{i}$に対する期待値および重みパラメータである。
+2リンクマニピュレータに対して、(I)アームの長さに不確かさがある場合、(II)リンク角度に不確かさがある場合、について計算した拡張可操作度を図~\ref{fig:case_i}~,\ref{fig:case_ii}に示す。
+\begin{figure}
+  \centering
+  \includegraphics[width=80truemm]{./simulation/length_plots.pdf}
+  \caption{(I)の場合における拡張可操作度の期待値、分散、標準偏差/期待値}
+  \label{fig:case_i}
+  \includegraphics[width=80truemm]{./simulation/angle_plots.pdf}
+  \caption{(II)の場合における拡張可操作度の期待値、分散、標準偏差/期待値}
+  \label{fig:case_ii}
+\end{figure}
+標準偏差/期待値にわずかな差異が生じているが、その他の変化ほとんど確認することができなかった。
 
 \end{document}
-
