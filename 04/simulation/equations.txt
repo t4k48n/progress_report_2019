@@ -1,0 +1,8 @@
+x = l1*cos(dl1*z1 + q1) + l2*cos(dl1*z1 + dl2*z2 + q1 + q2)
+y = l1*sin(dl1*z1 + q1) + l2*sin(dl1*z1 + dl2*z2 + q1 + q2)
+pxpq1 = -l1*sin(dl1*z1 + q1) - l2*sin(dl1*z1 + dl2*z2 + q1 + q2)
+pxpq2 = -l2*sin(dl1*z1 + dl2*z2 + q1 + q2)
+pypq1 = l1*cos(dl1*z1 + q1) + l2*cos(dl1*z1 + dl2*z2 + q1 + q2)
+pypq2 = l2*cos(dl1*z1 + dl2*z2 + q1 + q2)
+J = Matrix([[-l1*sin(dl1*z1 + q1) - l2*sin(dl1*z1 + dl2*z2 + q1 + q2), -l2*sin(dl1*z1 + dl2*z2 + q1 + q2)], [l1*cos(dl1*z1 + q1) + l2*cos(dl1*z1 + dl2*z2 + q1 + q2), l2*cos(dl1*z1 + dl2*z2 + q1 + q2)]])
+M = sqrt((l2**2*sin(dl1*z1 + dl2*z2 + q1 + q2)**2 + (-l1*sin(dl1*z1 + q1) - l2*sin(dl1*z1 + dl2*z2 + q1 + q2))**2)*(l2**2*cos(dl1*z1 + dl2*z2 + q1 + q2)**2 + (l1*cos(dl1*z1 + q1) + l2*cos(dl1*z1 + dl2*z2 + q1 + q2))**2) - (-l2**2*sin(dl1*z1 + dl2*z2 + q1 + q2)*cos(dl1*z1 + dl2*z2 + q1 + q2) + (-l1*sin(dl1*z1 + q1) - l2*sin(dl1*z1 + dl2*z2 + q1 + q2))*(l1*cos(dl1*z1 + q1) + l2*cos(dl1*z1 + dl2*z2 + q1 + q2)))**2)
