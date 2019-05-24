@@ -15,7 +15,7 @@
 \sloppy
 
 
-\title{動的マニピュレータに対する不確実性分散の拡張についての検討} % タイトル
+\title{不確かさを持つマニピュレータの動的可操作性} % タイトル
 \author{高谷秀明}                              % 著者
 \studentnumber{TD18K001}                         % 学籍番号
 \date{2019--05--24}                              % 日付
@@ -28,66 +28,62 @@
 
 \section{はじめに}
 
-マニピュレータがアーム長さのようなパラメータに不確かさを持つ場合，不確かさは手先へと伝播し，その結果手先位置も不確かさを持つようになる．
-先行研究では手先位置の確率分布の大きさを表す評価関数として不確実性分散（UV）を設計し，この評価関数を用いてマニピュレータの不確かさ解析や姿勢最適化を行った．
+前回の報告書では不確かさを持つ静的マニピュレータの可操作性の振る舞いを調べ，不確かさが可操作性へ及ぼす影響はほとんどないと結論づけた．
+今回は不確かさを持つ動的マニピュレータを導入し，不確かさが動的可操作性に与える影響を調査した．
 
-しかしUVは静的マニピュレータに対して定義した評価関数であるため，動的マニピュレータには適用することができないという問題を持つ．
-この問題を解決するアプローチとして，(A)~動的マニピュレータに対応する既存の評価関数に不確実性分散の性質を取り入れる，(B)~不確実性分散を動的マニピュレータへ拡張する，などが考えられる．
+\section{動的マニピュレータと動的可操作性}
 
-本報告書では，アプローチ(A)として吉川が提案した可操作性に不確かさの影響を取り入れる方法を提案する．
-可操作性は簡単な式変形で動的可操作性に拡張することが可能であるため，不確かさを取り入れた可操作性が有効であれば動的マニピュレータへの拡張も可能であると考えられる．
-手法の提案に加えて，本報告書では2リンクマニピュレータに手法を適用した結果を示す．
-
-\section{静的マニピュレータと可操作性}
-
-静的マニピュレータは姿勢$\bm{q} \in \mathbb{R}^{m}$から手先位置$\bm{r} \in \mathbb{R}^{n}$を求める関数$\bm{f}$としてモデル化される．
+手先座標$\bm{r} \in \mathbb{R}^{n}$についての運動学モデルおよびリンク角度$\bm{q} \in \mathbb{R}^{m}$についての動力学モデルが次式で与えられるマニピュレータを考える．
 \begin{equation}
-  \bm{r} = \bm{f}(\bm{q}). \label{eq:static_manipulator_position}
+  \bm{r} = \bm{f}(\bm{q}),
+  \quad
+  \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{H}(\bm{q}, \dot{\bm{q}}) + \bm{G}(\bm{q}) = \bm{\tau},
+  \label{eq:models}
 \end{equation}
-式~\eqref{eq:static_manipulator_position}の両辺を時刻$t$で微分すると，
-%式~\eqref{eq:static_manipulator_position}の両辺を時刻$t$で微分すると速度についてのモデルが得られる．
+ここで$\bm{M}$は慣性行列であり，マニピュレータの動特性の大きさを表す．
+
+式~\eqref{eq:models}のマニピュレータについての動的可操作性$w_{d}$は次式で定義される．
 \begin{equation}
-  \dot{\bm{r}} = \bm{J}(\bm{q}) \dot{\bm{q}}. \label{eq:static_manipulator_velocity}
+  w_{d}(\bm{\theta}) \triangleq \left. \sqrt{\det\left(\bm{J}\left(\bm{M}^{\mathrm{T}}\bm{M}\right)^{-1}\bm{J}^{\mathrm{T}}\right)} \right|_{\bm{q}=\bm{\theta}},
+  \label{fig:dynamic_manipulability}
 \end{equation}
-ここで$\bm{J} = [\partial f_{i} / \partial q_{j}]_{1 \leq i \leq m, 1 \leq j \leq n}$はマニピュレータのヤコビアンである．
+ここで$\bm{J}(\bm{q}) = [\partial r_{i} / \partial q_{j}]_{1 \leq i \leq n, 1 \leq j \leq m}$はマニピュレータのヤコビアンである．
+$w_{d}$は$\|\bm{\tau}\| \leq 1$を満たす任意のトルクで実現可能な全ての手先加速度$\ddot{\bm{r}}$で構成される多面体の体積を表す．
+$w_{d}(\bm{\theta})$の値が大きいことは姿勢$\bm{\theta}$におけるマニピュレータの運動性能が高いことを意味する．
 
-式~\eqref{eq:static_manipulator_velocity}のマニピュレータに対する可操作性$M$は次式で与えられる．
+\section{不確かさを取り入れた動的可操作性}
+
+式~\eqref{eq:models}のマニピュレータが不確かさを持つ，すなわち不確かさを表す確率変数$\bm{\xi}$を含むとき，動的可操作性は姿勢と不確かさの関数へ拡張される．
 \begin{equation}
-  M(\bm{q}) = \sqrt{\det \left( \bm{J}(\bm{q}) \bm{J}^{\mathrm{T}}(\bm{q}) \right)}.
+  \bm{J}(\bm{q}) \mapsto \bm{J}(\bm{q}, \bm{\xi}), \quad
+  \bm{M}(\bm{q}) \mapsto \bm{M}(\bm{q}, \bm{\xi}) \Rightarrow
+  w_d(\bm{\theta}) \mapsto w_d(\bm{\theta}, \bm{\xi}).
+  \label{eq:expansion}
 \end{equation}
-指標$M$は姿勢$\bm{q}$の変化に対する$\bm{r}$の変化の大きさを表す．
-可操作性が大きいことはマニピュレータの運動性能が高いことを意味する．
+このとき動的可操作性の期待値および標準偏差が定義される．
+期待値は式~\eqref{fig:dynamic_manipulability}と同様に運動性能の高さを表し，
+標準偏差は不確かさが$w_{d}$の値に及ぼす影響の大きさを表すと解釈できる．
 
-\section{不確かさを取り入れた可操作性}
+\section{拡張動的可操作性の検証}
 
-マニピュレータが確率変数を$\bm{\xi} \in \mathbb{R}^{l}$で表される不確かさを持つ場合，式~\eqref{eq:static_manipulator_velocity}は次式で書き換えられる．
-\begin{equation}
-  \dot{\bm{r}} = \bm{J}^{*}(\bm{q}, \bm{\xi}) \dot{\bm{q}}. \label{eq:static_manipulator_velocity_with_uncertainty}
-\end{equation}
-ここで$\bm{J}^{*}$は不確かさもモデル化したヤコビアンである．
-
-このときの可操作性は，
-\begin{equation}
-  M(\bm{q}, \bm{\xi}) = \sqrt{\det \left( \bm{J}^{*}(\bm{q}, \bm{\xi}) \bm{J}^{*\mathrm{T}}(\bm{q}, \bm{\xi}) \right)}.
-\end{equation}
-以下ではこの$M$を拡張可操作性と呼ぶことにする．
-本研究では$M$の統計量から不確かさが手先運動に与える影響を推定できるという仮説を立てた．
-次節ではこのことをシミュレーションで検証する．
-
-\section{拡張可操作性の検証}
-
-2リンクマニピュレータに対して，(I)アームの長さに不確かさがある場合，(II)リンク角度に不確かさがある場合，について計算した拡張可操作性を図~\ref{fig:case_i}~,\ref{fig:case_ii}に示す．
+式~\eqref{eq:expansion}の拡張された動的可操作性の挙動を調べるために，物体を把持した平面3リンクマニピュレータを考える．
+把持物の質量には不確かさが存在するものとする．
+このとき各リンク角度が$q_{1} = -q_{2}, 0 \leq q_{2} \leq 180, 0 \leq q_{3} \leq 180$ [deg]であるときの拡張動的可操作性の期待値と標準偏差を図~\ref{fig:dyman_mean_std_2d}に示す．
 \begin{figure}
   \centering
-  \includegraphics[width=80truemm]{./dm_mean.pdf}
-  \includegraphics[width=80truemm]{./dm_std.pdf}
+  \includegraphics[width=60truemm]{./dm_mean.pdf}
+  \includegraphics[width=60truemm]{./dm_std.pdf}
   \caption{動的可操作性の期待値（上）と標準偏差（下）}
-  \label{fig:case_i}
-  %\includegraphics[width=80truemm]{./simulation/angle_plots.pdf}
-  \includegraphics[width=80truemm]{./dm_dist.pdf}
-  \caption{(II)の場合における拡張可操作性の期待値，分散，標準偏差/期待値}
-  \label{fig:case_ii}
+  \label{fig:dyman_mean_std_2d}
+  \includegraphics[width=60truemm]{./dm_dist.pdf}
+  \caption{図~\ref{fig:dyman_mean_std_2d}の一点鎖線に沿ってプロットした動的可操作性}
+  \label{fig:dyman_mean_std_1d}
 \end{figure}
-標準偏差/期待値にわずかな差異が生じているが，その他の変化ほとんど確認することができなかった．
+図から期待値と標準偏差がほとんど同様の傾向を示していることが確認できる．
+
+図中の一点鎖線は同じ手先位置$(x, y) = (1, 0)$ [m]を指す姿勢を示している．
+この線に沿ってプロットした期待値と標準偏差を図~\ref{fig:dyman_mean_std_1d}に示す．
+期待値の変化量に比べて標準偏差の変化量は小さいため，不確かさが動的可操作性に及ぼす影響は姿勢の影響に比べて無視できる．
+前報告会の結果と今回の結果より，不確かさの影響を表す指標として可操作性を用いるのは合理的でないと結論づける．
 
 \end{document}
