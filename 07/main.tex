@@ -1,0 +1,43 @@
+% 報告会テンプレート（LuaLaTeX対応版）
+\documentclass[10pt,a4j,twocolumn]{ltjsarticle}
+
+
+\usepackage{graphicx}   % \includegraphics を使うためのパッケージ読み込み
+\usepackage{imcreport}  % IMC報告会用テンプレートパッケージの読み込み
+
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+
+% ハイフネーションを抑制する．数値が大きいほど，無理にでも抑制しようとする．
+\hyphenpenalty=10000\relax
+\exhyphenpenalty=10000\relax
+\sloppy
+
+
+\title{不確かさの影響を評価関数に取り入れた冗長マニピュレータの軌道生成} % タイトル
+\author{高谷　秀明}                              % 著者
+\studentnumber{TD18K001}                         % 学籍番号
+\date{2019-07-23}                              % 日付
+\header{前期最終報告}                                % 左上のヘッダ内容
+
+
+\begin{document}
+
+\maketitle % タイトル，著者情報などを挿入
+
+\section{はじめに}
+
+前回は不確かさを持つ動的マニピュレータについて，不確かさが動的可操作性に及ぼす影響を調査した．
+その結果，動的可操作性は不確かさを用いた動的マニピュレータの姿勢決定には利用できないと結論づけた．
+
+\section{不確かさを持つ動的マニピュレータ}
+
+\begin{equation}
+  \bm{M}
+\end{equation}
+
+\section{軌道最適化問題}
+
+与えられた時間$\varDelta T$で初期姿勢$\bm{q}_{i}$および終端姿勢$\bm{q}_{f}$へ姿勢変更するための姿勢軌道$\bm{q}(t) \; (0 \leq t \leq \varDelta T)$を求める．
+
+\end{document}
